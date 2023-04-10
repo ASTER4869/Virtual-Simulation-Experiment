@@ -1,12 +1,12 @@
 <template>
-      <h1 class="title" >实验1 基于COSMIC的小型软件项目规模度量实验
+      <h1 class="title" >实验7 基于最大最小法的软件项目/产品的不确定性实验
       
       <span>  <el-button  class="guidance" type="primary" text  @click="" ><el-icon size="25px"><Document /></el-icon>实验指导书下载</el-button></span> 
   </h1>
   <hr />
   <!-- <span> {{ test }}</span> -->
   <h2>一、实验目的  </h2>
-  <p class="content">理解软件项目规模度量功能点法原理，通过实验操作掌握功能点法。 学生应以小组为单位，根据本小组“软件工程管理与经济”课程设计项目架构及组件等设计成果，以功能点方法测量该项目的规模(功能点数量)。 建议选用某一种功能点方法度量课程设计项目的功能点，并采用另外一种功能点方法或其他的软件规模度量方法对前一种方法的度量结果进行验证。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
+  <p class="content">理解最大最小法。  本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
   </p>
   <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
 
@@ -104,23 +104,20 @@ export default defineComponent({
 
                     // ajax request after empty completing
           setTimeout(() => {
-            let MAX_Key=Math.max(dataSource.value[state.selectedRowKeys[0]].cost1,
-            dataSource.value[state.selectedRowKeys[0]].cost2,
-            dataSource.value[state.selectedRowKeys[0]].cost3,
-            dataSource.value[state.selectedRowKeys[0]].cost4,
-            dataSource.value[state.selectedRowKeys[0]].cost5)
-            // if(state.selectedRowKeys[0].cost1)
-          let s_state=0
-          dataSource.value.forEach(function (item) {
-            if(MAX_Key<Math.max(item.cost1,item.cost2,item.cost3,item.cost4,item.cost5))
-            {
-              s_state=1
-            }
-
+            let min_num=[]
+            dataSource.value.forEach(function (item) {
+              min_num.push(Math.min(item.cost1,item.cost2,item.cost3,item.cost4,item.cost5))
           })
-          if(s_state==0)
+          let minNum=Math.max.apply(null,min_num)
+          console.log(dataSource.value)
+          console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
+          if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
+          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
+          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
+          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
+          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
           {
-            message.success('最大最大法所选方案正确');
+            message.success('最大最小法所选方案正确');
           }
           else
           {
@@ -173,7 +170,7 @@ export default defineComponent({
     ];
     const dataSource: Ref<DataItem[]> = ref([
       {
-        key: '0',
+        key: '1',
         plan: '方案A',
         cost1: -900,
         cost2: 300,
@@ -183,7 +180,7 @@ export default defineComponent({
 
       },
       {
-        key: '1',
+        key: '2',
         plan: '方案B',
         cost1: -550,
         cost2: 400,
@@ -193,7 +190,7 @@ export default defineComponent({
 
       },
       {
-        key: '2',
+        key: '3',
         plan: '方案C',
         cost1: -200,
         cost2: 250,
@@ -203,7 +200,7 @@ export default defineComponent({
 
       },
       {
-        key: '3',
+        key: '4',
         plan: '方案D',
         cost1: -100,
         cost2: 200,
@@ -232,7 +229,7 @@ export default defineComponent({
     };
     const handleAdd = () => {
       const newData = {
-        key: `${count.value}`,
+        key: `${count.value}`+(new Date().getTime() / 1000+""),
         plan:`方案`+String.fromCharCode(count.value + 64)  ,
         cost1: 0,
         cost2: 0,

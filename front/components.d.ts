@@ -18,6 +18,7 @@ declare module '@vue/runtime-core' {
     AFormItemRest: typeof import('ant-design-vue/es')['FormItemRest']
     AInput: typeof import('ant-design-vue/es')['Input']
     AInputGroup: typeof import('ant-design-vue/es')['InputGroup']
+    AInputNumber: typeof import('ant-design-vue/es')['InputNumber']
     AModal: typeof import('ant-design-vue/es')['Modal']
     APagination: typeof import('ant-design-vue/es')['Pagination']
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
