@@ -11,13 +11,13 @@
     </p>
     <h2>二、实验参数  </h2>
     
-    <el-table :data="tableData" border style="width: 100%"  :summary-method="data=>getSummaries(data,index)" show-summary ref="detailTable">
+    <el-table :data="tableData"  style="width: 100%"  :summary-method="data=>getSummaries(data,index)" show-summary ref="detailTable">
     <el-table-column prop="component" label="组件" width="80" />
     <el-table-column prop="number" label="数量" width="80" />
     <el-table-column label="复杂度">
         <el-table-column label="简单">
             <el-table-column label="计数">
-                <el-table-column prop="A" label="A"/>\
+                <el-table-column prop="A" label="A"/>
             </el-table-column>
             <el-table-column label="权重">
                 <el-table-column prop="B" label="B"/>

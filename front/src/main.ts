@@ -17,11 +17,14 @@ import IconFontPlugin from '@/plugins/iconfont';
 import ElementPlus from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/theme-chalk/index.css';
+import Antd from 'ant-design-vue';
+
 
 const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
+app.use(Antd).mount('#app');
 app.use(stepin, { router });
 app.use(AuthPlugin, { action: 'disable' });
 // iconfont 插件。url为你的 iconfont 图标资源地址（你的iconfont 仓库可获取此地址）
