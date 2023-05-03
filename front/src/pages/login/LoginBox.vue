@@ -35,6 +35,7 @@
   import { reactive, ref, onMounted } from 'vue';
   import { useAccountStore } from '@/store';
   import useThemeStore from 'stepin/es/theme-editor/store';
+import router from '@/router';
 
   export interface LoginFormProps {
     username: string;
@@ -61,7 +62,7 @@
 
   const accountStore = useAccountStore();
   function login(params: LoginFormProps) {
-    // console.log(params)
+    console.log(params)
     loading.value = true;
     accountStore
       .login(params.username, params.password)
