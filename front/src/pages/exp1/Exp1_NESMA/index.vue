@@ -179,7 +179,7 @@
 
 <script >
 export default {
-    name: 'NESMA',
+    name: 'Exp1_NESMA',
     data() {
         return{     
             

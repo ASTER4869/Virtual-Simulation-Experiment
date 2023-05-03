@@ -23,31 +23,30 @@
 </template>
 
 <script lang="ts">
-  import { useMenuStore } from '@/store';
-import { useExperimentStore } from '@/store/experiment';
+  import { useExperimentStore } from '@/store/experiment';
   import { useRoute } from 'vue-router';
-  const { getExperiment, getExperimentList } = useExperimentStore();
-  const { getMenuList } = useMenuStore();
+
   export default {
     name: 'Exp0',
     mounted() {
       const rt = useRoute()
-      console.log(rt.meta)
-      // const d = getExperimentInfo(rt.meta)
-      // console.log(d)
+      console.log(rt)
+      const d = getExperimentInfo(1)
+      
     },    
   };
-  function getExperimentInfo(title:string) {
-    getExperiment(1)
+  const exprimentStore = useExperimentStore();
+  function getExperimentInfo(id:number) {
+    // console.log(params)
+    exprimentStore
+    .getExperiment(id)
     .then((res) => {
-        // console.log(res)
-        return res.data
+        console.log(res)
       })
-    getExperimentList()
-    .then((res) => {
-        // console.log(res)
-        return res.data
+      .catch((e) => {
+        // emit('failure', e.message, params);
       })
+      .finally(() => (console.log('finish')));
   }
 </script>
 

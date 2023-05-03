@@ -8,7 +8,7 @@
   
   <script lang="ts">
     export default {
-      name: 'Exp4',
+      name: 'Exp6',
     };
   </script>
   

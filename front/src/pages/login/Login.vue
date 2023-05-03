@@ -14,7 +14,7 @@
   const router = useRouter();
 
   function onLoginSuccess() { 
-    router.push('/exp1/ifpug');
+    router.push('/system/menu');
     // profile().then((response) => {
     // const { account } = response;
     // console.log('login',account)
@@ -29,6 +29,7 @@
     name: '',
     // avatar: avatar,
     menuList: [
+      // { title: '个人中心', key: 'personal', icon: 'UserOutlined', onClick: () => router.push('/profile') },
       { title: '设置', key: 'setting', icon: 'SettingOutlined', onClick: () => (showSetting.value = true) },
       { type: 'divider' },
       {

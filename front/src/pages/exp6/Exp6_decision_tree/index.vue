@@ -32,9 +32,9 @@
 
 <script>
   import { Table } from 'ant-design-vue';
-  import HorizontalTree from '@/pages/exp6/JUECESHU/HorizontalTree.vue';
-  import EditableForm1 from '@/pages/exp6/JUECESHU/EditableForm1.vue';
-  import EditableForm2 from '@/pages/exp6/JUECESHU/EditableForm2.vue';
+  import HorizontalTree from '@/pages/exp6/Exp6_decision_tree/HorizontalTree.vue';
+  import EditableForm1 from '@/pages/exp6/Exp6_decision_tree/EditableForm1.vue';
+  import EditableForm2 from '@/pages/exp6/Exp6_decision_tree/EditableForm2.vue';
   export default {
     components: {
       'a-table': Table,
@@ -282,7 +282,48 @@
             },
           },
         ],
-        dataSource4: [],
+        dataSource4: [
+          {
+            investmentPresentValue: 4000,
+            investmentProbability: 0.6,
+            annualCostPresentValue: 200,
+            costProbability: 0.8,
+            annualRevenuePresentValue: 800,
+            revenueProbability: 0.7,
+            expectedNetPresentValue: 300,
+            probability: 0.5,
+          },
+          {
+            investmentPresentValue: 4000,
+            investmentProbability: 0.6,
+            annualCostPresentValue: 300,
+            costProbability: 0.8,
+            annualRevenuePresentValue: 800,
+            revenueProbability: 0.7,
+            expectedNetPresentValue: 300,
+            probability: 0.5,
+          },
+          {
+            investmentPresentValue: 4000,
+            investmentProbability: 0.7,
+            annualCostPresentValue: 200,
+            costProbability: 0.8,
+            annualRevenuePresentValue: 800,
+            revenueProbability: 0.7,
+            expectedNetPresentValue: 300,
+            probability: 0.5,
+          },
+          {
+            investmentPresentValue: 3000,
+            investmentProbability: 0.7,
+            annualCostPresentValue: 300,
+            costProbability: 0.8,
+            annualRevenuePresentValue: 800,
+            revenueProbability: 0.7,
+            expectedNetPresentValue: 300,
+            probability: 0.5,
+          },
+        ],
         columns4: [
           {
             title: '投资现值',
@@ -420,11 +461,6 @@
         }
       },
       calculateDataSource4() {
-        // this.dataSource4 = [];
-        while (this.dataSource4.length) {
-          this.dataSource4.pop();
-        }
-
         const investmentPresentValue = this.dataSource1.filter((item) => item.uncertainty === '投资');
         const annualCostPresentValue = this.dataSource1.filter((item) => item.uncertainty === '年经营成本');
         const annualRevenuePresentValue = this.dataSource1.filter((item) => item.uncertainty === '年销售收入');
@@ -471,7 +507,6 @@
             }
           }
         }
-        console.log(this.dataSource4);
       },
       handleDataSource1Update(newData) {
         console.log('parent watch dataSource1 change');
