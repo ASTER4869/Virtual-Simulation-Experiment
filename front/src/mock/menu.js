@@ -216,7 +216,76 @@ const presetList = [
     ]
 
   },
-  
+  {
+    id: 7,
+    name: 'exp7',
+    title: '软件项目/产品的不确定性实验',
+    target: '_self',
+    path: '/exp7',
+    component: '@/pages/exp7',
+    renderMenu: true,
+    parent: null,
+    permission: null,
+    cacheable: true,
+    children: [
+      {
+        id: 71,
+        name: 'exp7_hurwicz',
+        title: '赫维斯基法',
+        target: '_self',
+        path: '/exp7/hurwicz',
+        component: '@/pages/exp7/Exp7_Hurwicz/index.vue',
+        renderMenu: true,
+        permission: null,
+        cacheable: true,
+      },
+      {
+        id: 72,
+        name: 'exp7_laplace',
+        title: '拉普拉斯法',
+        target: '_self',
+        path: '/exp7/laplace',
+        component: '@/pages/exp7/Exp7_LAPLACE/index.vue',
+        renderMenu: true,
+        permission: null,
+        cacheable: true,
+      },
+      {
+        id: 73,
+        name: 'exp7_maxmax',
+        title: '最大最大法',
+        target: '_self',
+        path: '/exp7/maxmax',
+        component: '@/pages/exp7/Exp7_MAXMAX/index.vue',
+        renderMenu: true,
+        permission: null,
+        cacheable: true,
+      },
+      {
+        id: 74,
+        name: 'exp7_maxmin',
+        title: '最大最小法',
+        target: '_self',
+        path: '/exp7/maxmin',
+        component: '@/pages/exp7/Exp7_MAXMIN/index.vue',
+        renderMenu: true,
+        permission: null,
+        cacheable: true,
+      },
+      {
+        id: 74,
+        name: 'exp7_regret',
+        title: '最小最大后悔值法',
+        target: '_self',
+        path: '/exp7/regret',
+        component: '@/pages/exp7/Exp7_REGRET/index.vue',
+        renderMenu: true,
+        permission: null,
+        cacheable: true,
+      },
+    ]
+
+  },
 ];
 
 function getMenuList() {
