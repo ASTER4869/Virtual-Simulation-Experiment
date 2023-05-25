@@ -50,6 +50,16 @@ const routes: RouteRecordRaw[] = [
     },
     component: () => import('@/pages/Exp404.vue'),
   },
+  {
+    path: '/hurwicz',
+    name: 'hurwicz',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_Hurwicz/index.vue'),
+  },
 ];
 
 export default routes;
