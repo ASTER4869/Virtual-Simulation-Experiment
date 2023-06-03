@@ -7,10 +7,68 @@
     </h1>
     <hr />
     <!-- <span> {{ test }}</span> -->
-    <h2>一、实验目的 </h2>
-    <p class="content">理解最小最大后悔值法。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
+    <h2>一、实验目的</h2>
+    <p class="recontent">
+        本实验旨在使用最小最大后悔值法评估软件项目/产品开发中的不确定性，并探讨不同因素对于不确定性的影响。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
     </p>
-    <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+    <h2>二、实验内容</h2>
+    <p class="recontent">
+      使用最小最大后悔值法，探究不同估计方法下的方法选择。具体实验步骤如下：
+    </p>
+    <p class="content">1.获取实验指导书</p>
+    <li class="recontent">
+      学生通过下载实验指导书选项获取指导书文件
+
+    </li>
+    <br />
+    <p class="content">
+      2. 阅读实验指导书
+    </p>
+    <li class="recontent">
+      学生熟悉不确定性实验方法，并获取相应实验数据
+    </li>
+    <br />
+    <p class="content">
+      4. 填写实验数据
+    </p>
+    <li class="recontent">
+      学生将所给实验数据填写在对应表格
+    </li>
+    <br />
+    <p class="content">
+      5. 根据对应的方法，选择你所认为的最佳方案
+    </p>
+    <li class="recontent">
+      学生将选择的方案填写在对应位置
+    </li>
+    <br />
+    <p class="content">
+      6. 总结和讨论
+    </p>
+    <li class="recontent">
+      实验结果总结：总结该种方法对不确定性方法选择的影响。
+    </li>
+    <br />
+    <h2>三、实验原理</h2>
+    <h3 class="subtitle-content">1.最小最大后悔值法</h3>
+    <p class="content">
+        该方法考虑了决策者在做完决定，知道实际结果时的态度，考虑到没有选取最优方案作为行动方案时的机会成本。
+该方法计算过程是:先计算各方案在各种状态下的后悔值，选出各方案的最大后悔值，然后从各方案最大后悔值中选取最小值，该数值对应的方案就是决策者没有选择最优方案时后悔值最小的方案。
+
+
+    </p>
+    <h2>四、实验步骤</h2>
+    <p class="content">
+      1. 实验开始，填写实验数据
+    </p>
+    <div>
+
+<a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+<a-button class="insure" type="primary"  :loading="loading" @click="start">
+        运行
+    </a-button>
+</div>  
+
 
 
     <a-table bordered 
@@ -45,10 +103,14 @@
             </template>
         </template>
     </a-table>
+    <h2>五、实验结果</h2>
+    1. 当前最好方案为
+    <a-input v-model:value="bestplan" style="width: 200px" placeholder="方案xx" />
+    <h2>六、实验思考</h2>
+    <a-textarea v-model:value="reflection" placeholder="写下你的实验思考" :rows="4" />
+  <br />
+  <br />
 
-    <a-button class="insure" type="primary"  :loading="loading" @click="start">
-        确认
-    </a-button>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -80,6 +142,8 @@ export default defineComponent({
         EditOutlined,
     },
     setup() {
+        const bestplan = ref<string>('');
+        const reflection = ref<string>('');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -298,6 +362,8 @@ export default defineComponent({
         };
 
         return {
+            reflection,
+            bestplan,
             columns,
             onDelete,
             handleAdd,
@@ -345,9 +411,7 @@ export default defineComponent({
 
 .insure {
     margin-top: 20px;
-    right: 50px;
     margin-left: 50px;
-    position: absolute;
     font-weight: bold;
 }
 

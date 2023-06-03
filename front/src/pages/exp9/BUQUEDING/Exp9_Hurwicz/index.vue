@@ -6,15 +6,68 @@
                 </el-icon>实验指导书下载</el-button></span>
     </h1>
     <hr />
-    <!-- <span> {{ test }}</span> -->
-    <h2>一、实验目的 </h2>
-    <p class="content">理解赫维斯基法。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
+    <h2>一、实验目的</h2>
+    <p class="recontent">
+        本实验旨在使用赫维斯基法评估软件项目/产品开发中的不确定性，并探讨不同因素对于不确定性的影响。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
+    </p>
+    <h2>二、实验内容</h2>
+    <p class="recontent">
+      使用赫维斯基法，探究不同估计方法下的方法选择。具体实验步骤如下：
+    </p>
+    <p class="content">1.获取实验指导书</p>
+    <li class="recontent">
+      学生通过下载实验指导书选项获取指导书文件
+
+    </li>
+    <br />
+    <p class="content">
+      2. 阅读实验指导书
+    </p>
+    <li class="recontent">
+      学生熟悉不确定性实验方法，并获取相应实验数据
+    </li>
+    <br />
+    <p class="content">
+      4. 填写实验数据
+    </p>
+    <li class="recontent">
+      学生将所给实验数据填写在对应表格
+    </li>
+    <br />
+    <p class="content">
+      5. 根据对应的方法，选择你所认为的最佳方案
+    </p>
+    <li class="recontent">
+      学生将选择的方案填写在对应位置
+    </li>
+    <br />
+    <p class="content">
+      6. 总结和讨论
+    </p>
+    <li class="recontent">
+      实验结果总结：总结该种方法对不确定性方法选择的影响。
+    </li>
+    <br />
+    <h2>三、实验原理</h2>
+    <h3 class="subtitle-content">1.赫维斯基法</h3>
+    <p class="content">
+        赫维斯基法是对最大最小法和最大最大法两个方法进行折中的方法。决策者同时抱有乐观和悲观的态度，对每个方案的最好结果和最差结果进行加权平均计算，然后选取加权平均收益最大的方案作为最优行动方案。
+采用该方法时，需要选取一个乐观系数入，该系数取值在0和1之间。如，风险厌恶型决策者会给与最好结果0.3的权重，而给予最差结果0.7的权重。
+    </p>
+    <h2>四、实验步骤</h2>
+    <p class="content">
+      1. 实验开始，调整乐观参数
     </p>
     <div>
+    <p class="content">
+      2. 填写实验数据
+    </p>
     <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
     当前最好结果的权重：
         <a-input-number  class="input-number" id="inputNumber" v-model:value="factor" :min="0" :max="1" :step="0.1" />
-        
+        <a-button class="insure" type="primary"  :loading="loading" @click="start">
+        运行
+    </a-button>    
     </div>
 
     <a-table bordered :data-source="dataSource" :columns="columns" :pagination="false">
@@ -47,10 +100,13 @@
             </template>
         </template>
     </a-table>
-
-    <a-button class="insure" type="primary"  :loading="loading" @click="start">
-        确认
-    </a-button>
+    <h2>五、实验结果</h2>
+    1. 当前最好方案为
+    <a-input v-model:value="bestplan" style="width: 200px" placeholder="方案xx" />
+    <h2>六、实验思考</h2>
+    <a-textarea v-model:value="reflection" placeholder="写下你的实验思考" :rows="4" />
+  <br />
+  <br />
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -81,7 +137,9 @@ export default defineComponent({
         EditOutlined,
     },
     setup() {
+        const bestplan = ref<string>('');
         const factor = ref<number>(0.3);
+        const reflection = ref<string>('');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -253,6 +311,8 @@ export default defineComponent({
         };
 
         return {
+            reflection,
+            bestplan,
             columns,
             onDelete,
             handleAdd,
@@ -301,9 +361,7 @@ export default defineComponent({
 
 .insure {
     margin-top: 20px;
-    right: 50px;
-    margin-left: 50px;
-    position: absolute;
+    margin-left: 100px;
     font-weight: bold;
 }
 .input-number{
@@ -346,6 +404,7 @@ export default defineComponent({
     .editable-add-btn {
         margin-bottom: 8px;
     }
+
 }
 
 .editable-cell:hover .editable-cell-icon {
