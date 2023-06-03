@@ -21,7 +21,6 @@ import Antd from 'ant-design-vue';
 
 
 const app = createApp(App);
-
 app.use(pinia);
 app.use(router);
 app.use(Antd).mount('#app');
