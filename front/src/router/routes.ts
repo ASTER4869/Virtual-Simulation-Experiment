@@ -60,6 +60,46 @@ const routes: RouteRecordRaw[] = [
     },
     component: () => import('@/pages/exp9/BUQUEDING/Exp9_Hurwicz/index.vue'),
   },
+  {
+    path: '/laplace',
+    name: 'laplace',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_LAPLACE/index.vue'),
+  },
+  {
+    path: '/maxmax',
+    name: 'maxmax',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_MAXMAX/index.vue'),
+  },
+  {
+    path: '/maxmin',
+    name: 'maxmin',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_MAXMIN/index.vue'),
+  },
+  {
+    path: '/regret',
+    name: 'regret',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_REGRET/index.vue'),
+  },
 ];
 
 export default routes;

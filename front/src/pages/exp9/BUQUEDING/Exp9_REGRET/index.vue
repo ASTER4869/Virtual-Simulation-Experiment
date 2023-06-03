@@ -13,7 +13,7 @@
     <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
 
 
-    <a-table bordered :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+    <a-table bordered 
         :data-source="dataSource" :columns="columns" :pagination="false">
         <template #bodyCell="{ column, text, record }">
             <template
@@ -46,7 +46,7 @@
         </template>
     </a-table>
 
-    <a-button class="insure" type="primary" :disabled="!hasSelected" :loading="loading" @click="start">
+    <a-button class="insure" type="primary"  :loading="loading" @click="start">
         确认
     </a-button>
 </template>
@@ -66,18 +66,13 @@ message.config({
 type Key = string | number;
 interface DataItem {
     key: string;
-    plan: string;
+    state: string;
     cost1: number;
     cost2: number;
     cost3: number;
     cost4: number;
-    cost5: number;
-    regret1: number;
-    regret2: number;
-    regret3: number;
-    regret4: number;
-    regret5: number;
 }
+
 
 export default defineComponent({
     components: {
@@ -95,79 +90,89 @@ export default defineComponent({
         const hasSelected = computed(() => state.selectedRowKeys.length > 0);
 
         const start = () => {
-            if (state.selectedRowKeys.length > 1) {
-                message.info('仅可选择一个');
-            }
-            else {
-
-
-                let matrix = []
-                dataSource.value.forEach(function (item) {
-                    let cost = [item.cost1, item.cost2, item.cost3, item.cost4, item.cost5]
-                    console.log(cost)
-                    matrix.push(cost)
+            dataSource.value = dataSource.value.filter(item => item.key.search('-'));
+            let row_temp=new Array([],[],[],[]);
+                dataSource.value.forEach(function (item) {                       
+                    row_temp[0].push(item.cost1)
+                    row_temp[1].push(item.cost2)
+                    row_temp[2].push(item.cost3)
+                    row_temp[3].push(item.cost4)
                 })
+
                 let bestArr = []
-                console.log(matrix)
-                for (let j = 0; j < matrix[0].length; j++) {
-                    let temp = matrix[0][j];
-                    for (let i = 0; i < matrix.length; i++) {
-                        if (temp < matrix[i][j]) {
-                            temp = matrix[i][j]
+                for (let j = 0; j < row_temp[0].length; j++) {
+                    let temp = row_temp[0][j];
+                    for (let i = 0; i < row_temp.length; i++) {
+                        if (temp < row_temp[i][j]) {
+                            temp = row_temp[i][j]
                         }
                     }
                     bestArr.push(temp)
                 }
                 console.log(bestArr)
                 let reMatrix = []
-                for (let i = 0; i < matrix.length; i++) {
+                for (let i = 0; i < row_temp.length; i++) {
                     reMatrix[i]=[]             
                 }
 
-                for (let i = 0; i < matrix.length; i++) {
-                    for (let j = 0; j < matrix[i].length; j++) {
-                        reMatrix[i][j] = bestArr[j] - matrix[i][j]
+                for (let i = 0; i < row_temp.length; i++) {
+                    for (let j = 0; j < row_temp[i].length; j++) {
+                        reMatrix[i][j] = bestArr[j] - row_temp[i][j]
                     }
                 }
                 let i = 0
                 let p = 0
-                dataSource.value.forEach(function (item) {
-                    if (item.regret1 != reMatrix[i][0]
-                        || item.regret2 != reMatrix[i][1]
-                        || item.regret3 != reMatrix[i][2]
-                        || item.regret4 != reMatrix[i][3]
-                        || item.regret5 != reMatrix[i][4]) {
-                        p = 1
-                    }
-                    i++
-                })
+                // dataSource.value.forEach(function (item) {
+                //     if (item.regret1 != reMatrix[i][0]
+                //         || item.regret2 != reMatrix[i][1]
+                //         || item.regret3 != reMatrix[i][2]
+                //         || item.regret4 != reMatrix[i][3]
+                //         || item.regret5 != reMatrix[i][4]) {
+                //         p = 1
+                //     }
+                //     i++
+                // })
                 console.log(reMatrix)
+                for (let j = 0; j < reMatrix[0].length; j++) {
+                        
+                    const newData = {
+                        key: "-"+`${count.value}`+(new Date().getTime() / 1000+""),
+                        state: "后悔值"+"0"+(j+1).toString(),
+                        cost1: reMatrix[0][j],
+                        cost2: reMatrix[1][j],
+                        cost3: reMatrix[2][j],
+                        cost4: reMatrix[3][j],
+                    };
+                    dataSource.value.push(newData);
 
-                let maxRegret = []
-                for (let i = 0; i < reMatrix.length; i++) {
-                    maxRegret.push(Math.max.apply(null, reMatrix[i]))
-                }
-                let minMaxRegret = Math.min.apply(null, maxRegret)
-                if (p == 1) {
-                    message.error('后悔值计算错误');
-                }
-                else {
-                    console.log(dataSource.value)
-                    console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
-                    if (Math.max(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret1,
-                        dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret2,
-                        dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret3,
-                        dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret4,
-                        dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret5)
-                        == minMaxRegret) {
-                        message.success('最小最大后悔值法所选方案正确');
-                    }
-                    else {
-                        message.error('选择错误');
-                    }
+                    
                 }
 
-            }
+                // let maxRegret = []
+                // for (let i = 0; i < reMatrix.length; i++) {
+                //     maxRegret.push(Math.max.apply(null, reMatrix[i]))
+                // }
+                // let minMaxRegret = Math.min.apply(null, maxRegret)
+                // if (p == 1) {
+                //     message.error('后悔值计算错误');
+                // }
+                // else {
+                //     console.log(dataSource.value)
+                //     console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
+                //     if (Math.max(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret1,
+                //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret2,
+                //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret3,
+                //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret4,
+                //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret5)
+                //         == minMaxRegret) {
+                //         message.success('最小最大后悔值法所选方案正确');
+                //     }
+                //     else {
+                //         message.error('选择错误');
+                //     }
+                // }
+
+            
         };
         const onSelectChange = (selectedRowKeys: Key[]) => {
             console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -179,49 +184,25 @@ export default defineComponent({
 
         const columns = [
             {
-                title: '方案\\状态',
-                dataIndex: 'plan',
+                title: '状态\\方案',
+                dataIndex: 'state',
                 width: '10%',
             },
             {
-                title: '01',
+                title: '方案A',
                 dataIndex: 'cost1',
             },
             {
-                title: '02',
+                title: '方案B',
                 dataIndex: 'cost2',
             },
             {
-                title: '03',
+                title: '方案C',
                 dataIndex: 'cost3',
             },
             {
-                title: '04',
+                title: '方案D',
                 dataIndex: 'cost4',
-            },
-            {
-                title: '05',
-                dataIndex: 'cost5',
-            },
-            {
-                title: '后悔值01',
-                dataIndex: 'regret1',
-            },
-            {
-                title: '后悔值02',
-                dataIndex: 'regret2',
-            },
-            {
-                title: '后悔值03',
-                dataIndex: 'regret3',
-            },
-            {
-                title: '后悔值04',
-                dataIndex: 'regret4',
-            },
-            {
-                title: '后悔值05',
-                dataIndex: 'regret5',
             },
             {
                 title: 'operation',
@@ -231,65 +212,58 @@ export default defineComponent({
         const dataSource: Ref<DataItem[]> = ref([
             {
                 key: '1',
-                plan: '方案A',
+                state: '01',
                 cost1: -900,
-                cost2: 300,
+                cost2: -550,
                 cost3: -200,
-                cost4: 1800,
-                cost5: 700,
-                regret1: 0,
-                regret2: 0,
-                regret3: 0,
-                regret4: 0,
-                regret5: 0,
-
+                cost4: -100,
 
             },
             {
                 key: '2',
-                plan: '方案B',
-                cost1: -550,
+                state: '02',
+                cost1: 300,
                 cost2: 400,
-                cost3: 50,
-                cost4: 1500,
-                cost5: 500,
-                regret1: 0,
-                regret2: 0,
-                regret3: 0,
-                regret4: 0,
-                regret5: 0,
+                cost3: 250,
+                cost4: 200,
 
             },
             {
                 key: '3',
-                plan: '方案C',
+                state: '03',
                 cost1: -200,
-                cost2: 250,
+                cost2: 50,
                 cost3: 300,
-                cost4: 1200,
-                cost5: 1000,
-                regret1: 0,
-                regret2: 0,
-                regret3: 0,
-                regret4: 0,
-                regret5: 0,
+                cost4: 150,
 
             },
             {
                 key: '4',
-                plan: '方案D',
-                cost1: -100,
-                cost2: 200,
-                cost3: 150,
+                state: '04',
+                cost1: 1800,
+                cost2: 1500,
+                cost3: 1200,
                 cost4: 900,
-                cost5: 800,
-                regret1: 0,
-                regret2: 0,
-                regret3: 0,
-                regret4: 0,
-                regret5: 0,
 
             },
+            {
+                key: '5',
+                state: '05',
+                cost1: 700,
+                cost2: 500,
+                cost3: 1000,
+                cost4: 800,
+
+            },
+            // {
+            //     key: '6',
+            //     state: '加权后预期',
+            //     cost1: 0,
+            //     cost2: 0,
+            //     cost3: 0,
+            //     cost4: 0,
+
+            // },
 
         ]);
         const count = computed(() => dataSource.value.length + 1);
@@ -306,24 +280,21 @@ export default defineComponent({
             delete editableData[key];
         };
         const onDelete = (key: string) => {
+            dataSource.value = dataSource.value.filter(item => item.key.search('-'));
             dataSource.value = dataSource.value.filter(item => item.key !== key);
         };
         const handleAdd = () => {
+            dataSource.value = dataSource.value.filter(item => item.key.search('-'));
             const newData = {
-                key: `${count.value}` + (new Date().getTime() / 1000 + ""),
-                plan: `方案` + String.fromCharCode(count.value + 64),
+                key: `${count.value}`+(new Date().getTime() / 1000+""),
+                state: "0"+count.value.toString(),
                 cost1: 0,
                 cost2: 0,
                 cost3: 0,
                 cost4: 0,
-                cost5: 0,
-                regret1: 0,
-                regret2: 0,
-                regret3: 0,
-                regret4: 0,
-                regret5: 0,
             };
             dataSource.value.push(newData);
+
         };
 
         return {

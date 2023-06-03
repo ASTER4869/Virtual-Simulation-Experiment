@@ -12,7 +12,6 @@
 
   
   <a-table bordered 
-  :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
   :data-source="dataSource" :columns="columns" :pagination="false">
     <template #bodyCell="{ column, text, record }">
       <template v-if="['plan', 'cost1', 'cost2','cost3','cost4','cost5',].includes(column.dataIndex)">
@@ -51,7 +50,7 @@
     </template>
   </a-table>
 
-  <a-button class="insure" type="primary"  :disabled="!hasSelected" :loading="loading" @click="start">
+  <a-button class="insure" type="primary"  :loading="loading" @click="start">
     确认
   </a-button>
 
@@ -71,13 +70,12 @@ message.config({
 })
 type Key = string | number;
 interface DataItem {
-  key: string;
-  plan: string;
-  cost1: number;
-  cost2: number;
-  cost3: number;
-  cost4: number;
-  cost5: number;
+    key: string;
+    state: string;
+    cost1: number;
+    cost2: number;
+    cost3: number;
+    cost4: number;
 }
 
 export default defineComponent({
@@ -96,38 +94,34 @@ export default defineComponent({
     const hasSelected = computed(() => state.selectedRowKeys.length > 0);
 
     const start = () => {
-      if(state.selectedRowKeys.length>1)
-      {
-        message.info('仅可选择一个');
-      }
-      else{
+
 
                     // ajax request after empty completing
           setTimeout(() => {
             let min_num=[]
             dataSource.value.forEach(function (item) {
-              min_num.push(Math.min(item.cost1,item.cost2,item.cost3,item.cost4,item.cost5))
+              min_num.push(Math.min(item.cost1,item.cost2,item.cost3,item.cost4))
           })
           let minNum=Math.max.apply(null,min_num)
           console.log(dataSource.value)
           console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
-          if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
-          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
-          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
-          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
-          dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
-          {
-            message.success('最大最小法所选方案正确');
-          }
-          else
-          {
-            message.error('选择错误');
-          }
+          // if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
+          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
+          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
+          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
+          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
+          // {
+          //   message.success('最大最小法所选方案正确');
+          // }
+          // else
+          // {
+          //   message.error('选择错误');
+          // }
 
         }, 1000);
         
 
-    }
+    
     };
     const onSelectChange = (selectedRowKeys: Key[]) => {
       console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -138,79 +132,89 @@ export default defineComponent({
 
 
     const columns = [
-      {
-        title: '方案\\状态',
-        dataIndex: 'plan',
-        width: '10%',
-      },
-      {
-        title: '01',
-        dataIndex: 'cost1',
-      },
-      {
-        title: '02',
-        dataIndex: 'cost2',
-      },
-      {
-        title: '03',
-        dataIndex: 'cost3',
-      },
-      {
-        title: '04',
-        dataIndex: 'cost4',
-      },
-      {
-        title: '05',
-        dataIndex: 'cost5',
-      },
-      {
-        title: 'operation',
-        dataIndex: 'operation',
-      },
-    ];
-    const dataSource: Ref<DataItem[]> = ref([
-      {
-        key: '1',
-        plan: '方案A',
-        cost1: -900,
-        cost2: 300,
-        cost3: -200,
-        cost4: 1800,
-        cost5: 700,
+            {
+                title: '状态\\方案',
+                dataIndex: 'state',
+                width: '10%',
+            },
+            {
+                title: '方案A',
+                dataIndex: 'cost1',
+            },
+            {
+                title: '方案B',
+                dataIndex: 'cost2',
+            },
+            {
+                title: '方案C',
+                dataIndex: 'cost3',
+            },
+            {
+                title: '方案D',
+                dataIndex: 'cost4',
+            },
+            {
+                title: 'operation',
+                dataIndex: 'operation',
+            },
+        ];
+        const dataSource: Ref<DataItem[]> = ref([
+            {
+                key: '1',
+                state: '01',
+                cost1: -900,
+                cost2: -550,
+                cost3: -200,
+                cost4: -100,
 
-      },
-      {
-        key: '2',
-        plan: '方案B',
-        cost1: -550,
-        cost2: 400,
-        cost3: 50,
-        cost4: 1500,
-        cost5: 500,
+            },
+            {
+                key: '2',
+                state: '02',
+                cost1: 300,
+                cost2: 400,
+                cost3: 250,
+                cost4: 200,
 
-      },
-      {
-        key: '3',
-        plan: '方案C',
-        cost1: -200,
-        cost2: 250,
-        cost3: 300,
-        cost4: 1200,
-        cost5: 1000,
+            },
+            {
+                key: '3',
+                state: '03',
+                cost1: -200,
+                cost2: 50,
+                cost3: 300,
+                cost4: 150,
 
-      },
-      {
-        key: '4',
-        plan: '方案D',
-        cost1: -100,
-        cost2: 200,
-        cost3: 150,
-        cost4: 900,
-        cost5: 800,
+            },
+            {
+                key: '4',
+                state: '04',
+                cost1: 1800,
+                cost2: 1500,
+                cost3: 1200,
+                cost4: 900,
 
-      },
+            },
+            {
+                key: '5',
+                state: '05',
+                cost1: 700,
+                cost2: 500,
+                cost3: 1000,
+                cost4: 800,
 
-    ]);
+            },
+            // {
+            //     key: '6',
+            //     state: '加权后预期',
+            //     cost1: 0,
+            //     cost2: 0,
+            //     cost3: 0,
+            //     cost4: 0,
+
+            // },
+
+        ]);
     const count = computed(() => dataSource.value.length + 1);
     const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 
@@ -225,20 +229,22 @@ export default defineComponent({
       delete editableData[key];
     };
     const onDelete = (key: string) => {
-      dataSource.value = dataSource.value.filter(item => item.key !== key);
-    };
-    const handleAdd = () => {
-      const newData = {
-        key: `${count.value}`+(new Date().getTime() / 1000+""),
-        plan:`方案`+String.fromCharCode(count.value + 64)  ,
-        cost1: 0,
-        cost2: 0,
-        cost3: 0,
-        cost4: 0,
-        cost5: 0,
-      };
-      dataSource.value.push(newData);
-    };
+            dataSource.value = dataSource.value.filter(item => item.key !== "0");
+            dataSource.value = dataSource.value.filter(item => item.key !== key);
+        };
+        const handleAdd = () => {
+            onDelete("0")
+            const newData = {
+                key: `${count.value}`+(new Date().getTime() / 1000+""),
+                state: "0"+count.value.toString(),
+                cost1: 0,
+                cost2: 0,
+                cost3: 0,
+                cost4: 0,
+            };
+            dataSource.value.push(newData);
+
+        };
 
     return {
       columns,

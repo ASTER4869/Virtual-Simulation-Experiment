@@ -1,8 +1,19 @@
 <template>
 <router-link to='/hurwicz'>
- <button>点击跳转2</button>
+ <button>hurwicz</button>
 </router-link>
-    
+<router-link to='/laplace'>
+ <button>laplace</button>
+</router-link>
+<router-link to='/maxmax'>
+ <button>maxmax</button>
+</router-link>
+<router-link to='/maxmin'>
+ <button>maxmin</button>
+</router-link>
+<router-link to='/regret'>
+ <button>regret</button>
+</router-link> 
   </template>
   
 
