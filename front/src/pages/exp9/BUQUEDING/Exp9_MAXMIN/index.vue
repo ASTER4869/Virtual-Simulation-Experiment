@@ -1,13 +1,16 @@
 <template>
-      <h1 class="title" >实验7 基于最大最小法的软件项目/产品的不确定性实验
-      
-      <span>  <el-button  class="guidance" type="primary" text  @click="" ><el-icon size="25px"><Document /></el-icon>实验指导书下载</el-button></span> 
-  </h1>
-  <hr />
-  <!-- <span> {{ test }}</span> -->
-  <h2>一、实验目的</h2>
+  <div id="pdf-content">
+    <h1 class="title">实验9 基于最大最小法的软件项目/产品的不确定性实验
+
+      <span> <el-button class="guidance" type="primary" text @click=""><el-icon size="25px">
+            <Document />
+          </el-icon>实验指导书下载</el-button></span>
+    </h1>
+    <hr />
+    <!-- <span> {{ test }}</span> -->
+    <h2>一、实验目的</h2>
     <p class="recontent">
-        本实验旨在使用最大最小法评估软件项目/产品开发中的不确定性，并探讨不同因素对于不确定性的影响。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
+      本实验旨在使用最大最小法评估软件项目/产品开发中的不确定性，并探讨不同因素对于不确定性的影响。 本实验为课内设计性实验项目，实验学时 1 学时，完成实验报告 1 学时。
     </p>
     <h2>二、实验内容</h2>
     <p class="recontent">
@@ -59,27 +62,23 @@
     </p>
     <div>
 
-<a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+      <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
 
-</div>  
-  
-  <a-table bordered 
-  :data-source="dataSource" :columns="columns" :pagination="false">
-    <template #bodyCell="{ column, text, record }">
-      <template v-if="['plan', 'cost1', 'cost2','cost3','cost4','cost5',].includes(column.dataIndex)">
-        <div>
-          <a-input
-            v-if="editableData[record.key]"
-            v-model:value="editableData[record.key][column.dataIndex]"
-            style="margin: -5px 0"
-          />
-          <template v-else>
-            {{ text }}
-          </template>
-        </div>
-      </template>
-      <template v-else-if="column.dataIndex === 'operation'">
-        <span v-if="editableData[record.key]">
+    </div>
+
+    <a-table bordered :data-source="dataSource" :columns="columns" :pagination="false">
+      <template #bodyCell="{ column, text, record }">
+        <template v-if="['plan', 'cost1', 'cost2', 'cost3', 'cost4', 'cost5',].includes(column.dataIndex)">
+          <div>
+            <a-input v-if="editableData[record.key]" v-model:value="editableData[record.key][column.dataIndex]"
+              style="margin: -5px 0" />
+            <template v-else>
+              {{ text }}
+            </template>
+          </div>
+        </template>
+        <template v-else-if="column.dataIndex === 'operation'">
+          <span v-if="editableData[record.key]">
             <a-typography-link @click="save(record.key)">Save</a-typography-link>
             <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
               <a>&nbsp;&nbsp;&nbsp;Cancel</a>
@@ -91,32 +90,29 @@
           <span>
             <a>&nbsp;&nbsp;&nbsp;</a>
           </span>
-        <a-popconfirm
-          v-if="dataSource.length"
-          title="Sure to delete?"
-          @confirm="onDelete(record.key)"
-        >
-          <a>Delete</a>
-        </a-popconfirm>
+          <a-popconfirm v-if="dataSource.length" title="Sure to delete?" @confirm="onDelete(record.key)">
+            <a>Delete</a>
+          </a-popconfirm>
+        </template>
       </template>
-    </template>
-  </a-table>
-  <h2>五、实验结果</h2>
+    </a-table>
+    <h2>五、实验结果</h2>
     1. 当前最好方案为
     <a-input v-model:value="bestplan" style="width: 200px" placeholder="方案xx" />
     <h2>六、实验思考</h2>
     <a-textarea v-model:value="reflection" placeholder="写下你的实验思考" :rows="4" />
-  <br />
-  <br />
-
-
+    <br />
+    <br />
+  </div>
+  <a-button style="margin-bottom: 8px" @click="downloadPdf"> 导出</a-button>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref , toRefs} from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
 import type { Ref, UnwrapRef } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { cloneDeep, max } from 'lodash-es';
 import { message, Modal } from 'ant-design-vue'
+import html2pdf from 'html2pdf.js';
 
 
 message.config({
@@ -126,12 +122,12 @@ message.config({
 })
 type Key = string | number;
 interface DataItem {
-    key: string;
-    state: string;
-    cost1: number;
-    cost2: number;
-    cost3: number;
-    cost4: number;
+  key: string;
+  state: string;
+  cost1: number;
+  cost2: number;
+  cost3: number;
+  cost4: number;
 }
 
 export default defineComponent({
@@ -139,9 +135,25 @@ export default defineComponent({
     CheckOutlined,
     EditOutlined,
   },
+  methods: {
+    downloadPdf() {
+      const element = document.getElementById('pdf-content');
+      const opt = {
+        // 转换后的pdf的外边距分别为：上: 10px、右: 20px、下: 10px、左:20px
+        margin: [10, 20, 10, 20],
+        filename: '最大最小法.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 5 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // 调用html2pdf库的方法生成PDF文件并下载
+      html2pdf().from(element).set(opt).save();
+    }
+  },
   setup() {
     const bestplan = ref<string>('');
-        const reflection = ref<string>('');
+    const reflection = ref<string>('');
     const state = reactive<{
       selectedRowKeys: Key[];
       loading: boolean;
@@ -154,32 +166,32 @@ export default defineComponent({
     const start = () => {
 
 
-                    // ajax request after empty completing
-          setTimeout(() => {
-            let min_num=[]
-            dataSource.value.forEach(function (item) {
-              min_num.push(Math.min(item.cost1,item.cost2,item.cost3,item.cost4))
-          })
-          let minNum=Math.max.apply(null,min_num)
-          console.log(dataSource.value)
-          console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
-          // if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
-          // {
-          //   message.success('最大最小法所选方案正确');
-          // }
-          // else
-          // {
-          //   message.error('选择错误');
-          // }
+      // ajax request after empty completing
+      setTimeout(() => {
+        let min_num = []
+        dataSource.value.forEach(function (item) {
+          min_num.push(Math.min(item.cost1, item.cost2, item.cost3, item.cost4))
+        })
+        let minNum = Math.max.apply(null, min_num)
+        console.log(dataSource.value)
+        console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
+        // if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
+        // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
+        // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
+        // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
+        // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
+        // {
+        //   message.success('最大最小法所选方案正确');
+        // }
+        // else
+        // {
+        //   message.error('选择错误');
+        // }
 
-        }, 1000);
-        
+      }, 1000);
 
-    
+
+
     };
     const onSelectChange = (selectedRowKeys: Key[]) => {
       console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -190,89 +202,89 @@ export default defineComponent({
 
 
     const columns = [
-            {
-                title: '状态\\方案',
-                dataIndex: 'state',
-                width: '10%',
-            },
-            {
-                title: '方案A',
-                dataIndex: 'cost1',
-            },
-            {
-                title: '方案B',
-                dataIndex: 'cost2',
-            },
-            {
-                title: '方案C',
-                dataIndex: 'cost3',
-            },
-            {
-                title: '方案D',
-                dataIndex: 'cost4',
-            },
-            {
-                title: 'operation',
-                dataIndex: 'operation',
-            },
-        ];
-        const dataSource: Ref<DataItem[]> = ref([
-            {
-                key: '1',
-                state: '01',
-                cost1: -900,
-                cost2: -550,
-                cost3: -200,
-                cost4: -100,
+      {
+        title: '状态\\方案',
+        dataIndex: 'state',
+        width: '10%',
+      },
+      {
+        title: '方案A',
+        dataIndex: 'cost1',
+      },
+      {
+        title: '方案B',
+        dataIndex: 'cost2',
+      },
+      {
+        title: '方案C',
+        dataIndex: 'cost3',
+      },
+      {
+        title: '方案D',
+        dataIndex: 'cost4',
+      },
+      {
+        title: 'operation',
+        dataIndex: 'operation',
+      },
+    ];
+    const dataSource: Ref<DataItem[]> = ref([
+      {
+        key: '1',
+        state: '01',
+        cost1: -900,
+        cost2: -550,
+        cost3: -200,
+        cost4: -100,
 
-            },
-            {
-                key: '2',
-                state: '02',
-                cost1: 300,
-                cost2: 400,
-                cost3: 250,
-                cost4: 200,
+      },
+      {
+        key: '2',
+        state: '02',
+        cost1: 300,
+        cost2: 400,
+        cost3: 250,
+        cost4: 200,
 
-            },
-            {
-                key: '3',
-                state: '03',
-                cost1: -200,
-                cost2: 50,
-                cost3: 300,
-                cost4: 150,
+      },
+      {
+        key: '3',
+        state: '03',
+        cost1: -200,
+        cost2: 50,
+        cost3: 300,
+        cost4: 150,
 
-            },
-            {
-                key: '4',
-                state: '04',
-                cost1: 1800,
-                cost2: 1500,
-                cost3: 1200,
-                cost4: 900,
+      },
+      {
+        key: '4',
+        state: '04',
+        cost1: 1800,
+        cost2: 1500,
+        cost3: 1200,
+        cost4: 900,
 
-            },
-            {
-                key: '5',
-                state: '05',
-                cost1: 700,
-                cost2: 500,
-                cost3: 1000,
-                cost4: 800,
+      },
+      {
+        key: '5',
+        state: '05',
+        cost1: 700,
+        cost2: 500,
+        cost3: 1000,
+        cost4: 800,
 
-            },
-            // {
-            //     key: '6',
-            //     state: '加权后预期',
-            //     cost1: 0,
-            //     cost2: 0,
-            //     cost3: 0,
-            //     cost4: 0,
+      },
+      // {
+      //     key: '6',
+      //     state: '加权后预期',
+      //     cost1: 0,
+      //     cost2: 0,
+      //     cost3: 0,
+      //     cost4: 0,
 
-            // },
+      // },
 
-        ]);
+    ]);
     const count = computed(() => dataSource.value.length + 1);
     const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 
@@ -287,22 +299,22 @@ export default defineComponent({
       delete editableData[key];
     };
     const onDelete = (key: string) => {
-            dataSource.value = dataSource.value.filter(item => item.key !== "0");
-            dataSource.value = dataSource.value.filter(item => item.key !== key);
-        };
-        const handleAdd = () => {
-            onDelete("0")
-            const newData = {
-                key: `${count.value}`+(new Date().getTime() / 1000+""),
-                state: "0"+count.value.toString(),
-                cost1: 0,
-                cost2: 0,
-                cost3: 0,
-                cost4: 0,
-            };
-            dataSource.value.push(newData);
+      dataSource.value = dataSource.value.filter(item => item.key !== "0");
+      dataSource.value = dataSource.value.filter(item => item.key !== key);
+    };
+    const handleAdd = () => {
+      onDelete("0")
+      const newData = {
+        key: `${count.value}` + (new Date().getTime() / 1000 + ""),
+        state: "0" + count.value.toString(),
+        cost1: 0,
+        cost2: 0,
+        cost3: 0,
+        cost4: 0,
+      };
+      dataSource.value.push(newData);
 
-        };
+    };
 
     return {
       reflection,
@@ -327,34 +339,40 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-.title{
-    text-align:center;
-    font-family: sans-serif;
-    font-size:30px;
+.title {
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 30px;
 }
-.secondtitle{
-    text-indent: 2em;
-    font-weight: bold;
-    margin-left: 30px;
-    margin-right: 30px;
+
+.secondtitle {
+  text-indent: 2em;
+  font-weight: bold;
+  margin-left: 30px;
+  margin-right: 30px;
 }
-.content{
-    text-indent: 2em;
-    margin-left: 20px;
-    margin-right: 20px;
+
+.content {
+  text-indent: 2em;
+  margin-left: 20px;
+  margin-right: 20px;
 }
-.guidance{
-    position:absolute;
-    right:50px;
-    font-weight: bold;
+
+.guidance {
+  position: absolute;
+  right: 50px;
+  font-weight: bold;
 }
-.insure{
-    margin-top:20px;
-    margin-left: 50px;
-    font-weight: bold;
+
+.insure {
+  margin-top: 20px;
+  margin-left: 50px;
+  font-weight: bold;
 }
+
 .editable-cell {
   position: relative;
+
   .editable-cell-input-wrapper,
   .editable-cell-text-wrapper {
     padding-right: 24px;
@@ -390,6 +408,7 @@ export default defineComponent({
     margin-bottom: 8px;
   }
 }
+
 .editable-cell:hover .editable-cell-icon {
   display: inline-block;
 }
