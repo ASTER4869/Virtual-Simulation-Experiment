@@ -2,9 +2,6 @@
     <div id="pdf-content">
         <h1 class="title">实验9 基于赫维斯基法的软件项目/产品的不确定性实验
 
-            <span> <el-button class="guidance" type="primary" text @click=""><el-icon size="25px">
-                        <Document />
-                    </el-icon>实验指导书下载</el-button></span>
         </h1>
         <hr />
         <h2>一、实验目的</h2>

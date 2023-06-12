@@ -100,6 +100,16 @@ const routes: RouteRecordRaw[] = [
     },
     component: () => import('@/pages/exp9/BUQUEDING/Exp9_REGRET/index.vue'),
   },
+  {
+    path: '/all',
+    name: 'all',
+    meta: {
+      icon: 'CreditCardOutlined',
+      renderMenu: false,
+      cacheable: false,
+    },
+    component: () => import('@/pages/exp9/BUQUEDING/Exp9_All/index.vue'),
+  },
 ];
 
 export default routes;

@@ -14,6 +14,9 @@
 <router-link to='/regret'>
  <button>regret</button>
 </router-link> 
+<router-link to='/all'>
+ <button>all</button>
+</router-link> 
   </template>
   
 
