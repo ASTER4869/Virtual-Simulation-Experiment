@@ -5,7 +5,7 @@
 
   <div type="flex" justify-content="center" style="height:50px">
     <div style="float:left">
-      <h1 class="title">{{ $route.meta.title }} </h1>
+      <h1 class="title">实验9 软件项目/产品的不确定性实验 </h1>
     </div>
     <div style="float:right">
       <a-button style="margin-right:20px" type="primary" shape="round" @click="downLoadFile">

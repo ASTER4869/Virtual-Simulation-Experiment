@@ -1,8 +1,5 @@
 <template>
     <div id="pdf-content">
-        <h1 class="title">实验9 软件项目/产品的不确定性实验
-
-        </h1>
         <hr />
         <h2>一、实验目的</h2>
         <p class="recontent">
