@@ -5,7 +5,7 @@
             当前最好结果的权重：
             <a-input-number class="input-number" id="inputNumber" v-model:value="factor" :min="0" :max="1" :step="0.1" />
             <a-button class="insure" type="primary" :loading="loading" @click="start">
-                运行
+                结果
             </a-button>
         </div>
 
@@ -39,9 +39,13 @@
                 </template>
             </template>
         </a-table>
+        <br />
+        <h3 class="subtitle-content">
+        {{ plantext }}
+        </h3>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
+import { computed, defineComponent, reactive, ref, toRefs ,getCurrentInstance} from 'vue';
 import type { Ref, UnwrapRef } from 'vue';
 import { CheckOutlined, EditOutlined } from '@ant-design/icons-vue';
 import { cloneDeep, max } from 'lodash-es';
@@ -82,12 +86,13 @@ export default defineComponent({
 
             // 调用html2pdf库的方法生成PDF文件并下载
             html2pdf().from(element).set(opt).save();
-        }
+        },
     },
     setup() {
         const bestplan = ref<string>('');
         const factor = ref<number>(0.3);
         const reflection = ref<string>('');
+        const plantext =ref<string>('因为加权后结果的最大值是____，所以最佳方案是_____。');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -97,7 +102,7 @@ export default defineComponent({
         });
         const hasSelected = computed(() => state.selectedRowKeys.length > 0);
         const start = () => {
-
+            console.log(plantext)
             onDelete("0")
             // ajax request after empty completing
             setTimeout(() => {
@@ -125,7 +130,19 @@ export default defineComponent({
                     cost4: assign_num[3],
                 };
                 dataSource.value.push(newData);
+                let text=""
+                text="因为加权后结果的最大值是"+Math.max(...assign_num)+",所以最佳方案是"
+                for (let i = 0; i < assign_num.length; i++) {
+                    if(assign_num[i]==Math.max(...assign_num))
+                    {
+                        text=text+"方案"+String.fromCharCode(65+i)+"。"
+                        
+                    }
 
+                }
+                plantext.value=text
+            console.log(plantext)
+                
 
 
             }, 1000);
@@ -257,6 +274,7 @@ export default defineComponent({
         };
 
         return {
+            plantext,
             reflection,
             bestplan,
             columns,
@@ -271,7 +289,6 @@ export default defineComponent({
             hasSelected,
             ...toRefs(state),
             factor,
-
             // func
             start,
             onSelectChange,

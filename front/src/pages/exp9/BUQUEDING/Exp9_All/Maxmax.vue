@@ -1,7 +1,11 @@
 <template>
     
+    
         <div>
             <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
+            <a-button class="insure" type="primary" :loading="loading" @click="start">
+                结果
+            </a-button>
         </div>
 
 
@@ -35,6 +39,10 @@
                 </template>
             </template>
         </a-table>
+        <br />
+        <h3 class="subtitle-content">
+        {{ plantext }}
+        </h3>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -83,6 +91,7 @@ export default defineComponent({
     setup() {
         const bestplan = ref<string>('');
         const reflection = ref<string>('');
+        const plantext =ref<string>('因为所有最大值的最大值是____，所以最佳方案是_____。');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -94,7 +103,29 @@ export default defineComponent({
 
         const start = () => {
 
+            let row_temp = new Array([], [], [], []);
+            dataSource.value.forEach(function (item) {
+                row_temp[0].push(item.cost1)
+                row_temp[1].push(item.cost2)
+                row_temp[2].push(item.cost3)
+                row_temp[3].push(item.cost4)
+            })
+            let max_temp=[]
 
+            for (let i = 0; i < row_temp.length; i++) {
+
+                max_temp.push(Math.max(...row_temp[i]))
+            }
+            let text=""
+            text="因为所有方案最大值中的最大值是"+Math.max(...max_temp)+",所以最佳方案是"
+            for (let i = 0; i < row_temp.length; i++) {
+
+                if(max_temp[i]==Math.max(...max_temp))
+                {
+                    text=text+"方案"+String.fromCharCode(65+i)+"。"
+                }
+            }
+            plantext.value=text
 
 
         };
@@ -222,6 +253,7 @@ export default defineComponent({
         };
 
         return {
+            plantext,
             reflection,
             bestplan,
             columns,

@@ -3,7 +3,7 @@
 
             <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
             <a-button class="insure" type="primary" :loading="loading" @click="start">
-                运行
+                结果
             </a-button>
         </div>
 
@@ -37,6 +37,10 @@
                 </template>
             </template>
         </a-table>
+        <br />
+        <h3 class="subtitle-content">
+        {{ plantext }}
+        </h3>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -85,6 +89,7 @@ export default defineComponent({
     setup() {
         const bestplan = ref<string>('');
         const reflection = ref<string>('');
+        const plantext =ref<string>('因为加权后结果的最大值是____，所以最佳方案是_____。');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -120,6 +125,8 @@ export default defineComponent({
 
                 onDelete("0")
                 console.log(assign_num)
+                let text=""
+                text="因为期望值的最大值是"+Math.max(...assign_num)+",所以最佳方案是"
                 const newData = {
                     key: "0",
                     state: "期望值",
@@ -128,6 +135,14 @@ export default defineComponent({
                     cost3: assign_num[2],
                     cost4: assign_num[3],
                 };
+                for (let i = 0; i < assign_num.length; i++) {
+                    if(assign_num[i]==Math.max(...assign_num))
+                    {
+                        text=text+"方案"+String.fromCharCode(65+i)+"。"
+                        
+                    }
+                }
+                plantext.value=text
                 dataSource.value.push(newData);
 
 
@@ -261,6 +276,7 @@ export default defineComponent({
         };
 
         return {
+            plantext,
             reflection,
             bestplan,
             columns,

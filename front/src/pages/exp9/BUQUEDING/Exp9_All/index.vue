@@ -75,26 +75,27 @@
             根据实验指导书，填写下表
         </p>
         <div id="datatable">
+            <p class="tabletitle">
+                表1:赫维斯基法
+            </p>
             <Hurwicz></Hurwicz>
             <p class="tabletitle">
-                表1:赫维斯基法(上表)
+                表2:拉普拉斯法
             </p>
             <Laplace></Laplace>
             <p class="tabletitle">
-                表2:拉普拉斯法(上表)
+                表3:最大最大法
             </p>
             <Maxmax></Maxmax>
             <p class="tabletitle">
-                表3:最大最大法(上表)
+                表4:最大最小法
             </p>
             <Maxmin></Maxmin>
             <p class="tabletitle">
-                表4:最大最小法(上表)
+                表5:最小最大后悔值法
             </p>
             <Regret></Regret>
-            <p class="tabletitle">
-                表5:最小最大后悔值法(上表)
-            </p>
+            <br />
         </div>
         <h2>五、实验结果</h2>
         1. 根据赫维斯基法，最好方案为

@@ -3,7 +3,9 @@
       <div>
   
         <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
-  
+        <a-button class="insure" type="primary" :loading="loading" @click="start">
+                结果
+            </a-button>
       </div>
   
       <a-table bordered :data-source="dataSource" :columns="columns" :pagination="false">
@@ -36,6 +38,10 @@
           </template>
         </template>
       </a-table>
+      <br />
+        <h3 class="subtitle-content">
+        {{ plantext }}
+        </h3>
   </template>
   <script lang="ts">
   import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -85,6 +91,7 @@
     setup() {
       const bestplan = ref<string>('');
       const reflection = ref<string>('');
+      const plantext =ref<string>('因为所有方案的最小值的最大值是____，所以最佳方案是_____。');
       const state = reactive<{
         selectedRowKeys: Key[];
         loading: boolean;
@@ -96,30 +103,30 @@
   
       const start = () => {
   
-  
-        // ajax request after empty completing
-        setTimeout(() => {
-          let min_num = []
-          dataSource.value.forEach(function (item) {
-            min_num.push(Math.min(item.cost1, item.cost2, item.cost3, item.cost4))
-          })
-          let minNum = Math.max.apply(null, min_num)
-          console.log(dataSource.value)
-          console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
-          // if(minNum==Math.min(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost1,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost2,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost3,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost4,
-          // dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].cost5))
-          // {
-          //   message.success('最大最小法所选方案正确');
-          // }
-          // else
-          // {
-          //   message.error('选择错误');
-          // }
-  
-        }, 1000);
+        let row_temp = new Array([], [], [], []);
+            dataSource.value.forEach(function (item) {
+                row_temp[0].push(item.cost1)
+                row_temp[1].push(item.cost2)
+                row_temp[2].push(item.cost3)
+                row_temp[3].push(item.cost4)
+            })
+            let min_temp=[]
+
+            for (let i = 0; i < row_temp.length; i++) {
+
+                min_temp.push(Math.min(...row_temp[i]))
+            }
+            let text=""
+            text="因为所有方案的最小值中的最大值是"+Math.max(...min_temp)+",所以最佳方案是"
+            for (let i = 0; i < row_temp.length; i++) {
+
+                if(min_temp[i]==Math.max(...min_temp))
+                {
+                    text=text+"方案"+String.fromCharCode(65+i)+"。"
+                }
+            }
+            plantext.value=text
+
   
   
   
@@ -248,6 +255,7 @@
       };
   
       return {
+        plantext,
         reflection,
         bestplan,
         columns,

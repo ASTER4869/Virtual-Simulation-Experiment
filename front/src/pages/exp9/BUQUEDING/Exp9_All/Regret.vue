@@ -4,7 +4,7 @@
 
             <a-button class="editable-add-btn" style="margin-bottom: 8px" @click="handleAdd">Add</a-button>
             <a-button class="insure" type="primary" :loading="loading" @click="start">
-                运行
+                结果
             </a-button>
         </div>
 
@@ -41,6 +41,10 @@
                 </template>
             </template>
         </a-table>
+        <br />
+        <h3 class="subtitle-content">
+        {{ plantext }}
+        </h3>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref, toRefs } from 'vue';
@@ -90,6 +94,7 @@ export default defineComponent({
     setup() {
         const bestplan = ref<string>('');
         const reflection = ref<string>('');
+        const plantext =ref<string>('因为所有方案的最大后悔值中的最小值是____，所以最佳方案是_____。');
         const state = reactive<{
             selectedRowKeys: Key[];
             loading: boolean;
@@ -132,16 +137,7 @@ export default defineComponent({
             }
             let i = 0
             let p = 0
-            // dataSource.value.forEach(function (item) {
-            //     if (item.regret1 != reMatrix[i][0]
-            //         || item.regret2 != reMatrix[i][1]
-            //         || item.regret3 != reMatrix[i][2]
-            //         || item.regret4 != reMatrix[i][3]
-            //         || item.regret5 != reMatrix[i][4]) {
-            //         p = 1
-            //     }
-            //     i++
-            // })
+
             console.log(reMatrix)
             for (let j = 0; j < reMatrix[0].length; j++) {
 
@@ -157,30 +153,24 @@ export default defineComponent({
 
 
             }
+            let max_temp=[]
 
-            // let maxRegret = []
-            // for (let i = 0; i < reMatrix.length; i++) {
-            //     maxRegret.push(Math.max.apply(null, reMatrix[i]))
-            // }
-            // let minMaxRegret = Math.min.apply(null, maxRegret)
-            // if (p == 1) {
-            //     message.error('后悔值计算错误');
-            // }
-            // else {
-            //     console.log(dataSource.value)
-            //     console.log(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0])
-            //     if (Math.max(dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret1,
-            //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret2,
-            //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret3,
-            //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret4,
-            //         dataSource.value.filter(item => state.selectedRowKeys[0] === item.key)[0].regret5)
-            //         == minMaxRegret) {
-            //         message.success('最小最大后悔值法所选方案正确');
-            //     }
-            //     else {
-            //         message.error('选择错误');
-            //     }
-            // }
+            for (let i = 0; i < reMatrix.length; i++) {
+
+                max_temp.push(Math.max(...reMatrix[i]))
+            }
+            let text=""
+            text="因为所有方案的最大后悔值中的最小值是"+Math.min(...max_temp)+",所以最佳方案是"
+            for (let i = 0; i < row_temp.length; i++) {
+
+                if(max_temp[i]==Math.min(...max_temp))
+                {
+                    text=text+"方案"+String.fromCharCode(65+i)+"。"
+                }
+            }
+            plantext.value=text
+
+
 
 
         };
@@ -308,6 +298,7 @@ export default defineComponent({
         };
 
         return {
+            plantext,
             reflection,
             bestplan,
             columns,
